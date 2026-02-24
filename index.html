@@ -153,12 +153,7 @@
 </head>
 <body>
 
-    <audio id="bg-music" loop autoplay style="display: none;">
-        <source src="audio/AcTuGmAtU3M...mp3" type="audio/mpeg">
-        <source src="audio/BIOS 4.mp3" type="audio/mpeg">
-        <source src="audio/Pretty Scene Girl! ((Slowed)).mp3" type="audio/mpeg">
-        <source src="audio/𖹭 self harm - sink saiko __ speed up ◌ ۪.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bg-music" controls style="display: none;"></audio>
 
     <div class="slideshow">
         <div class="slide"></div>
@@ -173,12 +168,46 @@
     </div>
 
     <script>
+        const playlist = [
+            'audio/Pretty Scene Girl! ((Slowed)).mp3',
+            'audio/BIOS 4.mp3',
+            'audio/AcTuGmAtU3M...mp3',
+            'audio/𖹭 self harm - sink saiko __ speed up ◌ ۪.mp3'
+        ];
+        
+        let currentTrack = 0;
+        const audio = document.getElementById('bg-music');
+        audio.volume = 0.2; // ПОЧЕМУ ГРОМКО ТАК?
+        
+        function playTrack(index) {
+            if (index < playlist.length) {
+                audio.src = playlist[index];
+                audio.play().catch(function(error) {
+                    console.log("Не удалось воспроизвести:", playlist[index], error);
+                });
+                console.log("Сейчас играет:", playlist[index]);
+            }
+        }
+        
+        audio.addEventListener('ended', function() {
+            currentTrack++;
+            if (currentTrack >= playlist.length) {
+                currentTrack = 0;
+            }
+            playTrack(currentTrack);
+        });
+        
         window.addEventListener('load', function() {
-            var audio = document.getElementById('bg-music');
-            audio.volume = 0.2;
-            audio.play().catch(function(error) {
-                console.log("Автовоспроизведение не сработало:", error);
-            });
+            playTrack(0);
+        });
+        
+        audio.addEventListener('error', function() {
+            console.log("Ошибка воспроизведения, переключаем на следующий трек");
+            currentTrack++;
+            if (currentTrack >= playlist.length) {
+                currentTrack = 0;
+            }
+            playTrack(currentTrack);
         });
     </script>
 
